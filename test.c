@@ -11,10 +11,9 @@ int main(int ac __attribute__((unused)), char **av)
 	ssize_t input_count;
 	char *command = NULL;
 	size_t command_size = 0;
-	char *command_args[2];
+	char **command_args;
 	pid_t child_pid;
-	int status;
-	int i;
+	int status, i;
 
 	printf("#cisfun$ ");
 	while ((input_count = getline(&command, &command_size, stdin)) != EOF)
@@ -22,15 +21,14 @@ int main(int ac __attribute__((unused)), char **av)
 		if (command[input_count - 1] == '\n')
 			command[input_count - 1] = '\0';
 
-		command_args[0] = command;
-		command_args[1] = NULL;
+		command_args = split_command(command);
 
 		child_pid = fork();
 		if (child_pid == -1)
 		{
 			printf("fork ERROR\n");
+			return (-1);
 		}
-
 		else if (child_pid == 0)
 		{
 			i = execve(command, command_args, NULL);
@@ -40,12 +38,13 @@ int main(int ac __attribute__((unused)), char **av)
 				printf("#cisfun$ ");
 			}
 		}
-		else
+			else
 		{
 			wait(&status);
-			printf("#cisfun$ ");
+			printf("#cisfun$3 ");
 		}
 	}
+	free(command_args);
 	free(command);
 	return (0);
 }
