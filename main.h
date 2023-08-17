@@ -16,4 +16,5 @@ int space_det(char *s);
 char **split_command(char *command);
 void print_error(char *s);
 int _strcmp(char *s1, char *s2);
+void free_args(char **command_args);
 #endif

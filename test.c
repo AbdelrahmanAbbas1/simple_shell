@@ -21,6 +21,9 @@ int main(int ac __attribute__((unused)), char **av)
 		if (command[input_count - 1] == '\n')
 			command[input_count - 1] = '\0';
 
+		if (_strcmp(command, "exit") == 0)
+			exit(98);
+
 		command_args = split_command(command);
 
 		child_pid = fork();
@@ -31,20 +34,21 @@ int main(int ac __attribute__((unused)), char **av)
 		}
 		else if (child_pid == 0)
 		{
-			i = execve(command, command_args, NULL);
+			i = execve(command_args[0], command_args, environ);
 			if (i == -1)
 			{
 				printf("%s: No such file or directory\n", av[0]);
 				printf("#cisfun$ ");
+				_exit(99);
 			}
 		}
 			else
 		{
 			wait(&status);
-			printf("#cisfun$3 ");
+			printf("#cisfun$ ");
 		}
 	}
-	free(command_args);
+	free_args(command_args);
 	free(command);
 	return (0);
 }
