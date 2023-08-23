@@ -19,9 +19,7 @@ int main(int ac __attribute__((unused)), char **av)
 	{
 		if (command[input_count - 1] == '\n')
 			command[input_count - 1] = '\0';
-		if (_strcmp(command, "exit") == 0)
-			exit(98);
-		command = handle_path(command);
+	
 		command_args = split_command(command);
 		child_pid = fork();
 		if (child_pid == -1)
