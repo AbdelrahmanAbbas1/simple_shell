@@ -1,55 +1,49 @@
-#define MAX_COMMAND_SIZE 1024
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include "main.h"
 
 /**
- * main - entry point
- *
- * Return: 0 (Success)
+ * main - Entry point
+ * @ac: Argument count
+ * @av: Argument vector
+ * Return: 0 (On success) or -1 otherwise
  */
-int main(void)
+int main(int ac __attribute__((unused)), char **av)
 {
-	char command[MAX_COMMAND_SIZE];
+	ssize_t input_count;
+	char *command = NULL;
+	size_t command_size = 0;
+	char **command_args;
 	pid_t child_pid;
-	int status;
+	int status, i;
 
-	while (1)
+	printf("cisfun$ ");
+	while ((input_count = getline(&command, &command_size, stdin)) != EOF)
 	{
-		printf("simple_shell$ ");
-		if (fgets(command, MAX_COMMAND_SIZE, stdin) == NULL)
-		{
-			printf("\n");
-			break;
-		}
-		command[strcspn(command, "\n")] = '\0';
+		if (command[input_count - 1] == '\n')
+			command[input_count - 1] = '\0';
+		if (_strcmp(command, "exit") == 0)
+			exit(98);
+		command = handle_path(command);
+		command_args = split_command(command);
 		child_pid = fork();
 		if (child_pid == -1)
 		{
-			perror("fork error");
-			exit(EXIT_FAILURE);
+			printf("fork ERROR\n");
+			return (-1);
 		}
 		else if (child_pid == 0)
 		{
-			int ret = execlp(command, command, NULL);
-
-			perror("Command execution error");
-			exit(ret);
-		}
-		else
-		{
-			waitpid(child_pid, &status, 0);
-			if (WIFEXITED(status))
+			if (_strcmp(command, "env") == 0)
+				print_env();
+			i = execve(command_args[0], command_args, environ);
+			if (i == -1)
 			{
-				printf("Child process exited with statsus %d\n", WEXITSTATUS(status));
-			} else if (WIFSIGNALED(status))
-			{
-				printf("Child process terminated by signal %d\n", WTERMSIG(status));
+				printf("%s: No such file or directory\n", av[0]);
+				_exit(99);
 			}
 		}
+		else
+			wait_print(&status, "cisfun$");
 	}
+	free(command);
 	return (0);
 }
