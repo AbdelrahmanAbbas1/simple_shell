@@ -15,11 +15,14 @@ int main(int ac __attribute__((unused)), char **av)
 	pid_t child_pid;
 	int status, i;
 
+	printf("cisfun$ ");
 	while ((input_count = getline(&command, &command_size, stdin)) != EOF)
 	{
 		if (command[input_count - 1] == '\n')
 			command[input_count - 1] = '\0';
-	
+		if (_strcmp(command, "exit") == 0)
+			exit(98);
+		command = handle_path(command);
 		command_args = split_command(command);
 		child_pid = fork();
 		if (child_pid == -1)
@@ -39,7 +42,7 @@ int main(int ac __attribute__((unused)), char **av)
 			}
 		}
 		else
-			wait_print(&status, "$");
+			wait_print(&status, "cisfun$");
 	}
 	free(command);
 	return (0);
