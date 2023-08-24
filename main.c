@@ -15,7 +15,6 @@ int main(int ac __attribute__((unused)), char **av)
 	pid_t child_pid;
 	int status, i;
 
-	printf("cisfun$ ");
 	while ((input_count = getline(&command, &command_size, stdin)) != EOF)
 	{
 		if (command[input_count - 1] == '\n')
@@ -42,7 +41,7 @@ int main(int ac __attribute__((unused)), char **av)
 			}
 		}
 		else
-			wait_print(&status, "cisfun$");
+			wait(&status);
 	}
 	free(command);
 	return (0);
