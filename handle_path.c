@@ -9,26 +9,37 @@
 char *handle_path(char *command)
 {
 	int i, k = 0;
+	int old_len = 0;
+	int new_len = 0;
 	char *path = "/bin/";
-	char *command_path;
+	char *tmp;
 
 	if ((_strncmp(command, "/bin/", 5) != 0) &&
 			(_strncmp(command, "/usr/bin/", 9) != 0))
 	{
-		command_path = malloc(sizeof(char) * (5 + _strlen(command) + 1));
-		if (command_path == NULL)
+		old_len = _strlen(command);
+		new_len = old_len + 5 + 1;
+		command = realloc(command, sizeof(char) * new_len);
+		if (command == NULL)
 			return (NULL);
 
-		for (i = 0; path[i] != '\0'; i++)
-			command_path[i] = path[i];
+		tmp = malloc(sizeof(char *) * old_len);
+		if (tmp == NULL)
+			return (NULL);
 
-		for (k = 0; command[k] != '\0'; k++)
+		for (i = 0; i < old_len; i++)
+			tmp[i] = command[i];
+
+		for (i = 0; path[i] != '\0'; i++)
+			command[i] = path[i];
+
+		for (; i < new_len - 1; i++)
 		{
-			command_path[i] = command[k];
-			i++;
+			command[i] = tmp[k];
+			k++;
 		}
-		command_path[i] = '\0';
-		return (command_path);
+		command[i] = '\0';
+		free(tmp);
 	}
 	return (command);
 }

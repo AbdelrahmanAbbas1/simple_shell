@@ -24,4 +24,5 @@ int print_env(char *command);
 void wait_print(int *status, char *prompt);
 int check_empty(char *command);
 int check_exit(char *command, char **command_args);
+void exit_free(char *command, char **command_args, char *file_name);
 #endif

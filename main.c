@@ -25,6 +25,7 @@ int main(int ac __attribute__((unused)), char **av)
 			continue;
 		if (_strcmp(command, "exit") == 0)
 			exit(check_exit(command, command_args));
+		command = handle_path(command);
 		command_args = split_command(command);
 		child_pid = fork();
 		if (child_pid == -1)
@@ -33,12 +34,7 @@ int main(int ac __attribute__((unused)), char **av)
 		{
 			i = execve(command_args[0], command_args, environ);
 			if (i == -1)
-			{
-				free(command);
-				free(command_args);
-				printf("%s: No such file or directory\n", av[0]);
-				_exit(99);
-			}
+				exit_free(command, command_args, av[0]);
 		}
 		else
 		{
