@@ -13,12 +13,15 @@ int main(int ac __attribute__((unused)), char **av)
 	size_t command_size = 0;
 	char **command_args;
 	pid_t child_pid;
-	int status, i;
+	int status, i, checker;
 
 	while ((input_count = getline(&command, &command_size, stdin)) != EOF)
 	{
 		if (command[input_count - 1] == '\n')
 			command[input_count - 1] = '\0';
+		checker = check_empty(command);
+		if (checker == 0)
+			continue;
 		command_args = split_command(command);
 		child_pid = fork();
 		if (child_pid == -1)

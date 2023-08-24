@@ -22,4 +22,5 @@ void free_args(char **command_args);
 char *handle_path(char *command);
 void print_env(void);
 void wait_print(int *status, char *prompt);
+int check_empty(char *command);
 #endif
