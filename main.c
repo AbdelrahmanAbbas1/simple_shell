@@ -25,7 +25,6 @@ int main(int ac __attribute__((unused)), char **av)
 			continue;
 		if (_strcmp(command, "exit") == 0)
 			exit(check_exit(command, command_args));
-		command = handle_path(command);
 		command_args = split_command(command);
 		child_pid = fork();
 		if (child_pid == -1)
