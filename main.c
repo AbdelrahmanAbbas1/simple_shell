@@ -24,12 +24,7 @@ int main(int ac __attribute__((unused)), char **av)
 		if (check_space == 0 || check_env == 0)
 			continue;
 		if (_strcmp(command, "exit") == 0)
-		{
-			free(command);
-			if (command_args == NULL)
-				exit(0);
-			exit(2);
-		}
+			exit(check_exit(command, command_args));
 		command_args = split_command(command);
 		child_pid = fork();
 		if (child_pid == -1)
