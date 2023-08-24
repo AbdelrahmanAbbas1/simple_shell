@@ -13,22 +13,22 @@ int main(int ac __attribute__((unused)), char **av)
 	size_t command_size = 0;
 	char **command_args;
 	pid_t child_pid;
-	int status, i, checker;
+	int status, i, check_space, check_env;
 
 	while ((input_count = getline(&command, &command_size, stdin)) != EOF)
 	{
 		if (command[input_count - 1] == '\n')
 			command[input_count - 1] = '\0';
-		checker = check_empty(command);
-		if (checker == 0)
+		check_env = print_env(command);
+		check_space = check_empty(command);
+		if (check_space == 0 || check_env == 0)
 			continue;
+		if (_strcmp(command, "exit") == 0)
+			exit(98);
 		command_args = split_command(command);
 		child_pid = fork();
 		if (child_pid == -1)
-		{
-			printf("fork ERROR\n");
 			return (-1);
-		}
 		else if (child_pid == 0)
 		{
 			i = execve(command_args[0], command_args, environ);

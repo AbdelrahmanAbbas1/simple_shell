@@ -20,7 +20,7 @@ int _strncmp(char *s1, char *s2, int n);
 int _strlen(char *s);
 void free_args(char **command_args);
 char *handle_path(char *command);
-void print_env(void);
+int print_env(char *command);
 void wait_print(int *status, char *prompt);
 int check_empty(char *command);
 #endif
