@@ -45,7 +45,6 @@ int main(int ac __attribute__((unused)), char **av)
 			input_count = getline(&command, &command_size, stdin);
 		}
 	}
-	free(command_args);
 	free(command);
 	return (0);
 }
