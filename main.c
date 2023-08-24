@@ -15,13 +15,11 @@ int main(int ac __attribute__((unused)), char **av)
 	pid_t child_pid;
 	int status, i;
 
-	while ((input_count = getline(&command, &command_size, stdin)) != EOF)
+	input_count = getline(&command, &command_size, stdin);
+	while (input_count != EOF)
 	{
 		if (command[input_count - 1] == '\n')
 			command[input_count - 1] = '\0';
-		if (_strcmp(command, "exit") == 0)
-			exit(98);
-		command = handle_path(command);
 		command_args = split_command(command);
 		child_pid = fork();
 		if (child_pid == -1)
@@ -31,18 +29,23 @@ int main(int ac __attribute__((unused)), char **av)
 		}
 		else if (child_pid == 0)
 		{
-			if (_strcmp(command, "env") == 0)
-				print_env();
 			i = execve(command_args[0], command_args, environ);
 			if (i == -1)
 			{
+				free(command);
+				free(command_args);
 				printf("%s: No such file or directory\n", av[0]);
 				_exit(99);
 			}
 		}
 		else
+		{
 			wait(&status);
+			free(command_args);
+			input_count = getline(&command, &command_size, stdin);
+		}
 	}
+	free(command_args);
 	free(command);
 	return (0);
 }
