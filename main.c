@@ -11,7 +11,7 @@ int main(int ac __attribute__((unused)), char **av)
 	ssize_t input_count;
 	char *command = NULL;
 	size_t command_size = 0;
-	char **command_args;
+	char **command_args = NULL;
 	pid_t child_pid;
 	int status, i, check_space, check_env;
 
@@ -26,6 +26,8 @@ int main(int ac __attribute__((unused)), char **av)
 		if (_strcmp(command, "exit") == 0)
 		{
 			free(command);
+			if (command_args == NULL)
+				exit(0);
 			exit(2);
 		}
 		command_args = split_command(command);
