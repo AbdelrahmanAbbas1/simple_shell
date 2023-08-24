@@ -15,8 +15,7 @@ int main(int ac __attribute__((unused)), char **av)
 	pid_t child_pid;
 	int status, i;
 
-	input_count = getline(&command, &command_size, stdin);
-	while (input_count != EOF)
+	while ((input_count = getline(&command, &command_size, stdin)) != EOF)
 	{
 		if (command[input_count - 1] == '\n')
 			command[input_count - 1] = '\0';
@@ -42,7 +41,6 @@ int main(int ac __attribute__((unused)), char **av)
 		{
 			wait(&status);
 			free(command_args);
-			input_count = getline(&command, &command_size, stdin);
 		}
 	}
 	free(command);
